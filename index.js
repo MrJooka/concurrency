@@ -71,17 +71,23 @@ const $ = (sel, parent = document) => parent.querySelector(sel);
 
 const append = (parent, child) => parent.appendChild(child);
 
-// append($('body'), el(Product.list.tmpl(Product.list())));
+const removeClass = (name, el) => (el.classList.remove(name), el);
+
+const show = (el) => removeClass('hide', el);
 
 const openPage = (title, dataFn, tmplFn) =>
-  append(
-    $('body'),
-    el(`
-        <div class="page">
+  show(
+    append(
+      $('body'),
+      el(`
+        <div class="page hide">
           <h2 class="title">${title}</h2>
           <div class="content">${tmplFn(dataFn())}</div>
         </div>
-      `)
+    `)
+    )
   );
 
-console.log(openPage('상품 목록', Product.list, Product.list.tmpl));
+document.addEventListener('click', () => {
+  openPage('상품 목록', Product.list, Product.list.tmpl);
+});

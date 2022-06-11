@@ -27,6 +27,20 @@
         width: 100%;
         height: 100%;
         background: #fff;
+        transform: translateY(0);
+        transition: transfrom 5.6s;
+      }
+
+      .page.hide {
+        transform: translateY(100%);
+        transition: none;
+      }
+
+      .page > .title {
+        margin: 0;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ccc;
       }
     </style>
   </head>
