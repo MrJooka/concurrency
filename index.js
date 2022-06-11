@@ -182,11 +182,23 @@ const openPage4 = async (title, dataFn, tmplFn) => {
     );
 };
 
-let i = 0;
+// let i = 0;
+// document.addEventListener('click', () => {
+//   openPage4(
+//     '상품 목록',
+//     i++ % 2 ? Product.list700 : Product.list30,
+//     Product.list.tmpl
+//   );
+// });
 document.addEventListener('click', () => {
   openPage4(
-    '상품 목록',
-    i++ % 2 ? Product.list700 : Product.list30,
-    Product.list.tmpl
+    '다른 뷰',
+    // () => delay(40, 'hello World'),
+    () => delay(100, 'hello World'),
+    (str) => `
+      <div>
+        <i style="font-size: 30px; font-weight: 800">${str}</i>
+      </div>
+    `
   );
 });
