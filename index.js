@@ -73,8 +73,14 @@ const append = (parent, child) => parent.appendChild(child);
 
 const removeClass = (name, el) => (el.classList.remove(name), el);
 
-const show = (el) => removeClass('hide', el);
+// 아래 show코드  실행부분은 dataFn 실행 -> templFn 실행 -> append실행 되고 나서 removeclass를 실행하는데
+// 하나의 콜스택 아래에 있을 땐 merge(병합되어) 실행되기 때문에 그냥 hide의 상태를 브라우저가 페인팅하지 않는다
+// 디버그로 step하나씩 실행햇을 때는 css 애니메이션이 실행 잘된다. 그러나 실제 브라우저는 painting 변경에 영향을 주는 코드들은
+// 비동기적으로 여러개의 실행후 최종결과 하나로 한번만 그리기  때문이다. (이것이 효율적이다)
+// 그래서 settimeout으로 비동기로 실행해야한다
 
+// const show = (el) => removeClass('hide', el);
+const show = (el) => setTimeout(() => removeClass('hide', el), 1);
 const openPage = (title, dataFn, tmplFn) =>
   show(
     append(
