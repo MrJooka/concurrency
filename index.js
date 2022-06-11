@@ -80,14 +80,15 @@ const append = (parent, child) => parent.appendChild(child);
 const removeClass = (name, el) => (el.classList.remove(name), el);
 
 const show = (el) => setTimeout(() => removeClass('hide', el), 1);
-const openPage = (title, dataFn, tmplFn) =>
+const openPage = async (title, dataFn, tmplFn) =>
   show(
     append(
       $('body'),
+      // 클릭하고 0.7초 후에 뜨기 때문에 사용성이 안좋다
       el(`
         <div class="page hide">
           <h2 class="title">${title}</h2>
-          <div class="content">${tmplFn(dataFn())}</div>
+          <div class="content">${tmplFn(await dataFn())}</div>
         </div>
     `)
     )
