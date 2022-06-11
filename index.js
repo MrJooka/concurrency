@@ -79,7 +79,11 @@ const append = (parent, child) => parent.appendChild(child);
 
 const removeClass = (name, el) => (el.classList.remove(name), el);
 
-const show = (el) => setTimeout(() => removeClass('hide', el), 1);
+const show = (el) => {
+  setTimeout(() => removeClass('hide', el), 1);
+  return el;
+};
+
 const openPage = async (title, dataFn, tmplFn) =>
   show(
     append(
@@ -94,6 +98,23 @@ const openPage = async (title, dataFn, tmplFn) =>
     )
   );
 
+const openPage2 = async (title, dataFn, tmplFn) => {
+  const dataP = dataFn();
+  const page = show(
+    append(
+      $('body'),
+      el(`
+        <div class="page hide">
+          <h2 class="title">${title}</h2>
+          <div class="content"></div>
+        </div>
+    `)
+    )
+  );
+
+  // 이제 슬라이드 올라오는 것은 바로 동작하고 데이터는 받는순간 뿌려준다
+  append(page, el(tmplFn(await dataP)));
+};
 document.addEventListener('click', () => {
-  openPage('상품 목록', Product.list700, Product.list.tmpl);
+  openPage2('상품 목록', Product.list700, Product.list.tmpl);
 });
