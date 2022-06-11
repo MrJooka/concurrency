@@ -80,10 +80,17 @@ const append = (parent, child) => parent.appendChild(child);
 
 const removeClass = (name, el) => (el.classList.remove(name), el);
 
-const show = (el) => {
-  setTimeout(() => removeClass('hide', el), 1);
-  return el;
-};
+// 데이터를 빨리 받았더라도 항상 css Transition 이 끝난후(Drawer가 다 올라온 후)에 데이터를 화면에 뿌리는게 더 좋은 사용성이다
+const show = (el) =>
+  new Promise((resolve) =>
+    setTimeout(() => {
+      removeClass('hide', el).addEventListener(
+        'transitionend',
+        () => resolve(el),
+        { once: true }
+      );
+    }, 1)
+  );
 
 const openPage = async (title, dataFn, tmplFn) =>
   show(
@@ -101,7 +108,7 @@ const openPage = async (title, dataFn, tmplFn) =>
 
 const openPage2 = async (title, dataFn, tmplFn) => {
   const dataP = dataFn();
-  const page = show(
+  const page = await show(
     append(
       $('body'),
       el(`
