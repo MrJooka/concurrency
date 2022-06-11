@@ -42,8 +42,9 @@ const Product = {};
 Product.list = () => products;
 
 // 통신으로 데이터를 받는다는 가정(0.7초후 데이터 받음)
-Product.list700 = () => delay(700, products);
+Product.list30 = () => delay(30, products);
 Product.list250 = () => delay(250, products);
+Product.list700 = () => delay(700, products);
 
 Product.list.tmpl = (products) => `
   <table>
@@ -154,6 +155,42 @@ const openPage3 = async (title, dataFn, tmplFn) => {
       )
     );
 };
+
+const nop = Symbol('nop');
+
+const isNop = (a) => a == nop;
+
+//통신하는 속도에 따라 일정 시간 이내에 받은건 그려진채 animation주고 이후에 받은건 올린다음 그려보자
+const openPage4 = async (title, dataFn, tmplFn) => {
+  const dataP = dataFn();
+  const res = await Promise.race([dataP, delay(50, nop)]);
+
+  const page = await show(
+    append(
+      $('body'),
+      el(`
+        <div class="page hide">
+          <h2 class="title">${title}</h2>
+          <div class="content">${isNop(res) ? '' : tmplFn(res)}</div>
+        </div>
+    `)
+    )
+  );
+
+  isNop(res) &&
+    show(
+      tap(append)(
+        addClass('hide', $('.content', page)),
+        el(tmplFn(await dataP))
+      )
+    );
+};
+
+let i = 0;
 document.addEventListener('click', () => {
-  openPage3('상품 목록', Product.list, Product.list.tmpl);
+  openPage4(
+    '상품 목록',
+    i++ % 2 ? Product.list700 : Product.list30,
+    Product.list.tmpl
+  );
 });
