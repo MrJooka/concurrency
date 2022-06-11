@@ -43,6 +43,7 @@ Product.list = () => products;
 
 // 통신으로 데이터를 받는다는 가정(0.7초후 데이터 받음)
 Product.list700 = () => delay(700, products);
+Product.list250 = () => delay(250, products);
 
 Product.list.tmpl = (products) => `
   <table>
@@ -116,5 +117,6 @@ const openPage2 = async (title, dataFn, tmplFn) => {
   append(page, el(tmplFn(await dataP)));
 };
 document.addEventListener('click', () => {
-  openPage2('상품 목록', Product.list700, Product.list.tmpl);
+  // 근데 데이터를 빨리 받아오면 현 상태에서는 올라오는 중간에 표시가 되어서 이미지가 들어가 있는 경우 더 안좋을 수 있다
+  openPage2('상품 목록', Product.list250, Product.list.tmpl);
 });
