@@ -128,6 +128,32 @@ const openPage2 = async (title, dataFn, tmplFn) => {
     tap(append)(addClass('hide', $('.content', page)), el(tmplFn(await dataP)))
   );
 };
+
+// 데이터가 통신으로 받을 수도 있고 기존 데이터 일수도 있다. 기존 데이터일 때는 drawer될 때 데이터도 그려져서 올라오는게 사용성이 좋다
+const isPromise = (a) => a instanceof Promise;
+
+const openPage3 = async (title, dataFn, tmplFn) => {
+  const dataP = dataFn();
+  const page = await show(
+    append(
+      $('body'),
+      el(`
+        <div class="page hide">
+          <h2 class="title">${title}</h2>
+          <div class="content">${isPromise(dataP) ? '' : tmplFn(dataP)}</div>
+        </div>
+    `)
+    )
+  );
+
+  isPromise(dataP) &&
+    show(
+      tap(append)(
+        addClass('hide', $('.content', page)),
+        el(tmplFn(await dataP))
+      )
+    );
+};
 document.addEventListener('click', () => {
-  openPage2('상품 목록', Product.list250, Product.list.tmpl);
+  openPage3('상품 목록', Product.list, Product.list.tmpl);
 });
