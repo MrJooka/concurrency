@@ -87,16 +87,14 @@ const tap =
   (f) =>
   (a, ...bs) => (f(a, ...bs), a);
 
-const show = (el) =>
+const transitionend = (f) => (el) =>
   new Promise((resolve) =>
     setTimeout(() => {
-      removeClass('hide', el).addEventListener(
-        'transitionend',
-        () => resolve(el),
-        { once: true }
-      );
+      f(el);
+      el.addEventListener('transitionend', () => resolve(el), { once: true });
     }, 1)
   );
+const show = transitionend((el) => removeClass('hide', el));
 
 const openPage = async (title, dataFn, tmplFn) =>
   show(
@@ -130,7 +128,6 @@ const openPage2 = async (title, dataFn, tmplFn) => {
   );
 };
 
-// 데이터가 통신으로 받을 수도 있고 기존 데이터 일수도 있다. 기존 데이터일 때는 drawer될 때 데이터도 그려져서 올라오는게 사용성이 좋다
 const isPromise = (a) => a instanceof Promise;
 
 const openPage3 = async (title, dataFn, tmplFn) => {
@@ -160,7 +157,6 @@ const nop = Symbol('nop');
 
 const isNop = (a) => a == nop;
 
-//통신하는 속도에 따라 일정 시간 이내에 받은건 그려진채 animation주고 이후에 받은건 올린다음 그려보자
 const openPage4 = async (title, dataFn, tmplFn) => {
   const dataP = dataFn();
   const res = await Promise.race([dataP, delay(50, nop)]);
