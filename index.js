@@ -67,6 +67,8 @@ const el = (html) => {
   return wrap.children[0];
 };
 
-document
-  .querySelector('body')
-  .appendChild(el(Product.list.tmpl(Product.list())));
+const $ = (sel, parent = document) => parent.querySelector(sel);
+
+const append = (parent, child) => parent.appendChild(child);
+
+append($('body'), el(Product.list.tmpl(Product.list())));
