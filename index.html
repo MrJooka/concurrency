@@ -42,6 +42,15 @@
         text-align: center;
         border-bottom: 1px solid #ccc;
       }
+
+      .page > .content {
+        opacity: 1;
+        transition: opacity 0.2s;
+      }
+      .page > .content.hide {
+        opacity: 0;
+        transition: none;
+      }
     </style>
   </head>
   <body>

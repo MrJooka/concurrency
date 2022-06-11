@@ -78,9 +78,14 @@ const $ = (sel, parent = document) => parent.querySelector(sel);
 
 const append = (parent, child) => parent.appendChild(child);
 
-const removeClass = (name, el) => (el.classList.remove(name), el);
+const editClass = (method) => (name, el) => (el.classList[method](name), el);
+const addClass = editClass('add');
+const removeClass = editClass('remove');
 
-// 데이터를 빨리 받았더라도 항상 css Transition 이 끝난후(Drawer가 다 올라온 후)에 데이터를 화면에 뿌리는게 더 좋은 사용성이다
+const tap =
+  (f) =>
+  (a, ...bs) => (f(a, ...bs), a);
+
 const show = (el) =>
   new Promise((resolve) =>
     setTimeout(() => {
@@ -96,7 +101,6 @@ const openPage = async (title, dataFn, tmplFn) =>
   show(
     append(
       $('body'),
-      // 클릭하고 0.7초 후에 뜨기 때문에 사용성이 안좋다
       el(`
         <div class="page hide">
           <h2 class="title">${title}</h2>
@@ -120,10 +124,10 @@ const openPage2 = async (title, dataFn, tmplFn) => {
     )
   );
 
-  // 이제 슬라이드 올라오는 것은 바로 동작하고 데이터는 받는순간 뿌려준다
-  append(page, el(tmplFn(await dataP)));
+  show(
+    tap(append)(addClass('hide', $('.content', page)), el(tmplFn(await dataP)))
+  );
 };
 document.addEventListener('click', () => {
-  // 근데 데이터를 빨리 받아오면 현 상태에서는 올라오는 중간에 표시가 되어서 이미지가 들어가 있는 경우 더 안좋을 수 있다
   openPage2('상품 목록', Product.list250, Product.list.tmpl);
 });
